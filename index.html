@@ -1,722 +1,534 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Network - Protect Earth</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AI问答助手 - 无明文配置版</title>
     <style>
+        /* 全局样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #2e7d32;
-            --secondary: #4caf50;
-            --accent: #8bc34a;
-            --light: #e8f5e9;
-            --dark: #1b5e20;
-            --text: #333333;
-            --white: #ffffff;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--light);
-            color: var(--text);
-            line-height: 1.6;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 10px;
         }
 
-        header {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
+        /* 主容器 */
+        .chat-app {
+            max-width: 800px;
             margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
 
-        .nav-container {
+        /* 顶部标题栏 */
+        .app-header {
+            background: #1677ff;
+            color: #fff;
+            padding: 18px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .logo i {
-            font-size: 2rem;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-
-        nav ul li a:hover {
-            color: var(--accent);
-        }
-
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--accent);
-            transition: width 0.3s ease;
-        }
-
-        nav ul li a:hover::after {
-            width: 100%;
-        }
-
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
-            background-size: cover;
-            background-position: center;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: var(--white);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
+        .app-title {
+            font-size: 18px;
             font-weight: 600;
-            transition: all 0.3s ease;
+        }
+
+        .clear-btn {
+            background: rgba(255,255,255,0.2);
             border: none;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.2s;
         }
 
-        .btn:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        .clear-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
 
-        section {
-            padding: 5rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent);
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            color: var(--text);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .about-img {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-
-        .about-img:hover img {
-            transform: scale(1.05);
-        }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .stat-item i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .stat-item h3 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            color: var(--text);
-        }
-
-        .initiatives {
-            background-color: var(--white);
-        }
-
-        .initiatives-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .initiative-card {
-            background-color: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .initiative-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .initiative-img {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .initiative-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .initiative-card:hover .initiative-img img {
-            transform: scale(1.1);
-        }
-
-        .initiative-content {
-            padding: 1.5rem;
-        }
-
-        .initiative-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .initiative-content p {
-            margin-bottom: 1.5rem;
-        }
-
-        .cta {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            text-align: center;
-            padding: 5rem 0;
-        }
-
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta .btn {
-            background-color: var(--white);
-            color: var(--primary);
-        }
-
-        .cta .btn:hover {
-            background-color: var(--accent);
-            color: var(--white);
-        }
-
-        footer {
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-column h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent);
-        }
-
-        .footer-column p {
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links li a {
-            color: var(--light);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links li a:hover {
-            color: var(--accent);
-            padding-left: 5px;
-        }
-
-        .social-links {
+        /* 聊天内容区 */
+        .chat-content {
+            height: 500px;
+            overflow-y: auto;
+            padding: 15px;
             display: flex;
-            gap: 1rem;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
+        /* 空聊天提示 */
+        .empty-tip {
             text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8c8c8c;
+            font-size: 14px;
+            padding: 40px 0;
         }
 
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
+        /* 消息样式 */
+        .message {
+            max-width: 75%;
+            padding: 10px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: #1677ff;
+            color: #fff;
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background: #e5e6eb;
+            color: #1d1d1f;
+        }
+
+        /* AI标识 */
+        .msg-ai::before {
+            content: 'AI';
+            position: absolute;
+            left: -22px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            color: #8c8c8c;
+        }
+
+        /* 时间戳 */
+        .msg-time {
+            font-size: 9px;
+            color: #8c8c8c;
+            position: absolute;
+            bottom: -16px;
+            white-space: nowrap;
+        }
+
+        .msg-user .msg-time {
+            right: 16px;
+        }
+
+        .msg-ai .msg-time {
+            left: 16px;
+        }
+
+        /* 输入区 */
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #e5e6eb;
+            display: flex;
+            gap: 8px;
+        }
+
+        #msg-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e6eb;
+            border-radius: 24px;
+            outline: none;
+            font-size: 14px;
+            resize: none;
+            height: 48px;
+            max-height: 120px;
+        }
+
+        #send-btn {
+            background: #1677ff;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 0 20px;
+            font-size: 14px;
             cursor: pointer;
+            transition: background 0.2s;
         }
 
-        @media (max-width: 992px) {
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        #send-btn:hover {
+            background: #0f62d9;
         }
 
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--primary);
-                flex-direction: column;
-                padding: 1rem 0;
-                text-align: center;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            }
-            
-            nav ul.active {
-                display: flex;
-            }
-            
-            nav ul li {
-                margin: 0;
-                padding: 0.8rem 0;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
+        #send-btn:disabled {
+            background: #8bb8ff;
+            cursor: not-allowed;
         }
 
-        /* Animation for stats counter */
-        .counter {
-            transition: all 0.5s ease;
+        /* 加载动画 */
+        .loading {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 打字中动画 */
+        .typing-box {
+            align-self: flex-start;
+            background: #e5e6eb;
+            padding: 10px 16px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #8c8c8c;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 错误提示 */
+        .error-tip {
+            background: #fff2f2;
+            color: #f53f3f;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            margin: 0 15px;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container nav-container">
-            <div class="logo">
-                <i class="fas fa-seedling"></i>
-                <span>Green Network</span>
-            </div>
-            <nav>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#initiatives">Initiatives</a></li>
-                    <li><a href="#get-involved">Get Involved</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+    <div class="chat-app">
+        <!-- 顶部标题栏 -->
+        <div class="app-header">
+            <div class="app-title">AI问答助手</div>
+            <button class="clear-btn" onclick="clearChat()">清除记录</button>
         </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container hero-content">
-            <h1>Protect Our Planet, Preserve Our Future</h1>
-            <p>Join the global movement to create a sustainable world through conservation, education, and community action.</p>
-            <a href="#get-involved" class="btn">Join Our Network</a>
+        <!-- 聊天内容区 -->
+        <div class="chat-content" id="chat-content">
+            <!-- 初始消息由JS生成 -->
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="section-title">
-                <h2>About Green Network</h2>
-                <p>We are a global community dedicated to environmental protection and sustainable development.</p>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Team planting trees">
-                </div>
-                <div class="about-text">
-                    <h3>Our Mission</h3>
-                    <p>Green Network is committed to creating a sustainable future by protecting natural ecosystems, promoting renewable energy, and empowering communities to take environmental action.</p>
-                    <p>Founded in 2010, we've grown from a small grassroots organization to an international network with over 50,000 members across 120 countries.</p>
-                    <p>Our approach combines scientific research, community engagement, and policy advocacy to address the most pressing environmental challenges of our time.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-tree"></i>
-                    <h3 class="counter" data-target="2500000">0</h3>
-                    <p>Trees Planted</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-users"></i>
-                    <h3 class="counter" data-target="50000">0</h3>
-                    <p>Active Members</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3 class="counter" data-target="120">0</h3>
-                    <p>Countries Reached</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-recycle"></i>
-                    <h3 class="counter" data-target="1500">0</h3>
-                    <p>Cleanup Projects</p>
-                </div>
-            </div>
+        <!-- 输入区 -->
+        <div class="input-area">
+            <textarea id="msg-input" placeholder="请输入你的问题..." oninput="resizeInput(this)"></textarea>
+            <button id="send-btn" onclick="sendMsg()">发送</button>
         </div>
-    </section>
-
-    <!-- Initiatives Section -->
-    <section class="initiatives" id="initiatives">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Initiatives</h2>
-                <p>Discover the key programs and projects we're implementing to protect our planet.</p>
-            </div>
-            <div class="initiatives-grid">
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://dialogue.earth/content/uploads/2021/04/lessons-from-the-rush-to-reforest-china-dialogue-2400x1599.jpg" alt="Reforestation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Global Reforestation</h3>
-                        <p>Planting millions of trees worldwide to restore ecosystems, combat climate change, and protect biodiversity.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Ocean Conservation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Ocean Conservation</h3>
-                        <p>Protecting marine ecosystems, reducing plastic pollution, and promoting sustainable fishing practices.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Renewable Energy">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Renewable Energy</h3>
-                        <p>Promoting solar, wind, and other clean energy sources to reduce dependence on fossil fuels.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta" id="get-involved">
-        <div class="container">
-            <h2>Join Our Global Movement</h2>
-            <p>Together, we can create a sustainable future for generations to come. Every action counts, no matter how small.</p>
-            <a href="#" class="btn">Become a Member</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Green Network</h3>
-                    <p>We are dedicated to protecting our planet through collaborative action, education, and sustainable solutions.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#initiatives">Initiatives</a></li>
-                        <li><a href="#get-involved">Get Involved</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Our Programs</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Reforestation</a></li>
-                        <li><a href="#">Ocean Cleanup</a></li>
-                        <li><a href="#">Wildlife Protection</a></li>
-                        <li><a href="#">Climate Education</a></li>
-                        <li><a href="#">Sustainable Agriculture</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Copper Creek Drive, New York</p>
-                    <p><i class="fas fa-phone"></i> +1 (312) 171-0771</p>
-                    <p><i class="fas fa-envelope"></i> support@greennetwork.org</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Green Network. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav ul').classList.toggle('active');
-        });
+        // ==================== 1. 加密配置（已填入你的专属编码）====================
+        const CONFIG_CODE = {
+            // 你的URL编码（已替换）
+            url: [109, 121, 121, 117, 120, 63, 52, 52, 125, 110, 102, 116, 102, 110, 51, 117, 113, 122, 120, 52, 123, 54, 52, 104, 109, 102, 121, 52, 104, 116, 114, 117, 113, 106, 121, 110, 116, 115, 120],
+            // 你的Key编码（已替换）
+            key: [120, 112, 50, 85, 82, 60, 106, 74, 112, 73, 120, 77, 111, 103, 115, 92, 113, 113, 71, 70, 107, 62, 61, 61, 61, 54, 54, 75, 61, 75, 59, 57, 105, 53, 103, 70, 58, 62, 106, 56, 59, 55, 60, 72, 103, 73, 105, 61, 102, 75, 61],
+            // 解码密钥（与生成编码时一致）
+            secret: 5
+        };
 
-        // Counter Animation
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            const speed = 200; // The lower the slower
-            
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
+        // ==================== 2. 解码工具函数（仅ASCII，无编码错误）====================
+        /**
+         * 数字编码转字符串
+         * @param {Array} codeArr - 数字编码数组
+         * @param {number} secret - 解码密钥
+         * @returns {string} 解码后的字符串
+         */
+        function decodeCode(codeArr, secret) {
+            return codeArr.map(num => {
+                // 加减解密，确保字符在ASCII范围内
+                const charCode = (num - secret + 128) % 128;
+                return String.fromCharCode(charCode);
+            }).join('');
+        }
+
+        /**
+         * 获取API配置（运行时解码，不存储）
+         * @returns {object} {url, key}
+         */
+        function getApiConfig() {
+            try {
+                const url = decodeCode(CONFIG_CODE.url, CONFIG_CODE.secret);
+                const key = decodeCode(CONFIG_CODE.key, CONFIG_CODE.secret);
                 
-                const inc = target / speed;
-                
-                if(count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(animateCounters, 1);
+                // 基础验证
+                if (!url.startsWith('https') || !key.startsWith('sk-')) {
+                    throw new Error('配置无效');
+                }
+                return { url, key };
+            } catch (e) {
+                console.error('配置解码失败:', e);
+                return { url: '', key: '' };
+            }
+        }
+
+        // ==================== 3. 工具函数（界面/交互）====================
+        /**
+         * 获取格式化时间戳
+         * @returns {string} HH:mm:ss
+         */
+        function getTime() {
+            const now = new Date();
+            return [
+                String(now.getHours()).padStart(2, '0'),
+                String(now.getMinutes()).padStart(2, '0'),
+                String(now.getSeconds()).padStart(2, '0')
+            ].join(':');
+        }
+
+        /**
+         * 自适应输入框高度
+         * @param {HTMLTextAreaElement} el - 输入框元素
+         */
+        function resizeInput(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+        }
+
+        /**
+         * 添加消息到聊天区
+         * @param {string} content - 消息内容
+         * @param {boolean} isUser - 是否是用户消息
+         * @returns {HTMLElement} 消息元素
+         */
+        function addMsg(content, isUser = false) {
+            const chatContent = document.getElementById('chat-content');
+            // 移除空提示
+            chatContent.querySelector('.empty-tip')?.remove();
+
+            // 创建消息元素
+            const msgEl = document.createElement('div');
+            msgEl.className = `message ${isUser ? 'msg-user' : 'msg-ai'}`;
+            // 转义特殊字符
+            const safeContent = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            msgEl.innerHTML = `
+                ${safeContent}
+                <div class="msg-time">${getTime()}</div>
+            `;
+
+            chatContent.appendChild(msgEl);
+            // 滚动到底部
+            chatContent.scrollTop = chatContent.scrollHeight;
+            return msgEl;
+        }
+
+        /**
+         * 显示打字中动画
+         * @returns {HTMLElement} 打字中元素
+         */
+        function showTyping() {
+            const chatContent = document.getElementById('chat-content');
+            const typingEl = document.createElement('div');
+            typingEl.className = 'typing-box';
+            typingEl.innerHTML = `
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            `;
+            chatContent.appendChild(typingEl);
+            chatContent.scrollTop = chatContent.scrollHeight;
+            return typingEl;
+        }
+
+        /**
+         * 打字机效果显示文本
+         * @param {HTMLElement} el - 消息元素
+         * @param {string} text - 要显示的文本
+         * @param {number} speed - 打字速度（毫秒/字符）
+         */
+        function typeWriter(el, text, speed = 15) {
+            let i = 0;
+            el.innerHTML = `<div class="msg-time">${getTime()}</div>`;
+            const contentEl = document.createElement('span');
+            el.insertBefore(contentEl, el.firstChild);
+
+            function type() {
+                if (i < text.length) {
+                    contentEl.textContent += text.charAt(i);
+                    i++;
+                    document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        /**
+         * 显示错误提示
+         * @param {string} msg - 错误信息
+         */
+        function showError(msg) {
+            const chatContent = document.getElementById('chat-content');
+            const errorEl = document.createElement('div');
+            errorEl.className = 'error-tip';
+            errorEl.textContent = msg;
+            chatContent.appendChild(errorEl);
+            chatContent.scrollTop = chatContent.scrollHeight;
+            // 5秒后移除
+            setTimeout(() => errorEl.remove(), 5000);
+        }
+
+        // ==================== 4. 核心业务逻辑 ====================
+        // 聊天历史（保留3轮：6条消息）
+        let chatHistory = [];
+
+        /**
+         * 清除聊天记录
+         */
+        function clearChat() {
+            const chatContent = document.getElementById('chat-content');
+            chatContent.innerHTML = '<div class="empty-tip">暂无聊天记录，开始提问吧！</div>';
+            chatHistory = [];
+        }
+
+        /**
+         * 发送消息
+         */
+        async function sendMsg() {
+            const input = document.getElementById('msg-input');
+            const sendBtn = document.getElementById('send-btn');
+            const msg = input.value.trim();
+
+            if (!msg) return;
+
+            // 状态更新
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<div class="loading"></div>';
+            // 添加用户消息
+            addMsg(msg, true);
+            // 加入历史
+            chatHistory.push({ role: 'user', content: msg });
+            // 清空输入框
+            input.value = '';
+            input.style.height = '48px';
+
+            try {
+                // 1. 获取API配置（运行时解码）
+                const { url: apiUrl, key: apiKey } = getApiConfig();
+                if (!apiUrl || !apiKey) {
+                    throw new Error('API配置解码失败，请检查编码和密钥');
+                }
+
+                // 2. 显示打字中
+                const typingEl = showTyping();
+
+                // 3. 处理上下文：保留最近3轮（6条）
+                const context = chatHistory.slice(-6);
+
+                // 4. 发送请求（带超时）
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 15000);
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: context,
+                        temperature: 0.7,
+                        max_tokens: 1024
+                    }),
+                    signal: controller.signal,
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+
+                // 清除超时
+                clearTimeout(timeout);
+                // 移除打字中
+                typingEl.remove();
+
+                // 5. 处理响应
+                if (!response.ok) {
+                    const errText = await response.text().catch(() => '');
+                    throw new Error(`请求失败 [${response.status}]：${errText.substring(0, 60)}`);
+                }
+
+                const data = await response.json();
+                if (!data.choices || !data.choices[0]?.message?.content) {
+                    throw new Error('API返回无有效内容');
+                }
+
+                // 6. 处理AI回复
+                const aiReply = data.choices[0].message.content;
+                chatHistory.push({ role: 'assistant', content: aiReply });
+                const aiMsgEl = addMsg('', false);
+                typeWriter(aiMsgEl, aiReply);
+
+            } catch (error) {
+                console.error('发送失败:', error);
+                // 分类提示错误
+                let errMsg = '';
+                if (error.name === 'AbortError') {
+                    errMsg = '请求超时（15秒），请检查网络或API服务';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errMsg = '网络请求失败：跨域限制/API地址不可达';
                 } else {
-                    counter.innerText = target;
+                    errMsg = `发送失败：${error.message}`;
+                }
+                showError(errMsg);
+                // 移除残留的打字中
+                document.querySelector('.typing-box')?.remove();
+            } finally {
+                // 恢复发送按钮
+                sendBtn.disabled = false;
+                sendBtn.textContent = '发送';
+            }
+        }
+
+        // ==================== 5. 初始化与事件绑定 ====================
+        /**
+         * 页面初始化
+         */
+        function init() {
+            // 添加初始消息
+            const initMsg = addMsg('你好！我是AI助手，有什么可以帮助你的吗？', false);
+            // 初始化历史
+            chatHistory.push({ role: 'assistant', content: initMsg.textContent.trim() });
+
+            // 回车发送（Shift+Enter换行）
+            document.getElementById('msg-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMsg();
                 }
             });
         }
 
-        // Initialize counters when page loads
-        window.addEventListener('load', animateCounters);
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    document.querySelector('nav ul').classList.remove('active');
-                }
-            });
-        });
+        // 页面加载完成后初始化
+        window.onload = init;
     </script>
 </body>
-
 </html>
